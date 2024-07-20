@@ -9,6 +9,7 @@ import 'package:app_quran/routes/route_name.dart';
 import 'package:app_quran/shared/theme_box.dart';
 import 'package:app_quran/shared/theme_color.dart';
 import 'package:app_quran/shared/theme_font.dart';
+import 'package:app_quran/shared/theme_global_variabel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,8 +26,8 @@ class MenuHome extends ConsumerWidget with SizeDevice{
     getsizeDevice(context);
     if(ref.watch(_dataMenuHome) == null){
       Future.delayed(Duration.zero, () async{
-        await ref.watch(fetchDataListSurahRiverpod.notifier).fetchDataListSurah();
-        ref.read(_dataMenuHome.notifier).state = ref.watch(fetchDataListSurahRiverpod.notifier).listSurah;
+        await ref.watch(fetchDataListSurahRiverpod.notifier).FetchDataListSurah();
+        ref.read(_dataMenuHome.notifier).state = ref.watch(fetchDataListSurahRiverpod.notifier).ListSurah;
         ref.read(isLoadingFetchDataListSurahRiverpod.notifier).state = ref.watch(fetchDataListSurahRiverpod.notifier).state;
         Future.delayed(Duration(milliseconds: 1000), (){
           ref.read(isLoadingFetchDataListSurahRiverpod.notifier).state = ref.watch(fetchDataListSurahRiverpod.notifier).state;
@@ -62,8 +63,8 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                       children: [
                         SizedBox(height: ThemeBox.defaultHeightBox20),
                         Text("text 1", style: TextStyle(color: Colors.white),),
-                        Text("text 2", style: TextStyle(color: Colors.white),),
-                        Text("text 3", style: TextStyle(color: Colors.white),),
+                        Text(formatDay.format(DateTime.now()), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                        Text(formatDateShort.format(DateTime.now()), style: TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),
@@ -92,15 +93,15 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                           ),
                           onChanged: (value){
                             if(value == ""){
-                              ref.read(_dataMenuHome.notifier).state = ref.watch(fetchDataListSurahRiverpod.notifier).listSurah;
+                              ref.read(_dataMenuHome.notifier).state = ref.watch(fetchDataListSurahRiverpod.notifier).ListSurah;
                             }else{
                               Future.delayed(Duration.zero, () async{
-                                await ref.watch(fetchSearchDataListSurahRiverpod.notifier).searchDataListSurah(
-                                  listDataSurah: ref.watch(fetchDataListSurahRiverpod.notifier).listSurah!, 
+                                await ref.watch(fetchSearchDataListSurahRiverpod.notifier).SearchDataListSurah(
+                                  listDataSurah: ref.watch(fetchDataListSurahRiverpod.notifier).ListSurah!, 
                                   searchSurah: value
                                 );
                                 ref.read(_dataMenuHome.notifier).state = [];
-                                ref.read(_dataMenuHome.notifier).state = ref.watch(fetchSearchDataListSurahRiverpod.notifier).listSurah;
+                                ref.read(_dataMenuHome.notifier).state = ref.watch(fetchSearchDataListSurahRiverpod.notifier).ListSurah;
                                 ref.read(isLoadingFetchDataListSurahRiverpod.notifier).state = ref.watch(fetchSearchDataListSurahRiverpod.notifier).state;
                                 Future.delayed(Duration(milliseconds: 1000), (){
                                   ref.read(isLoadingFetchDataListSurahRiverpod.notifier).state = ref.watch(fetchSearchDataListSurahRiverpod.notifier).state;

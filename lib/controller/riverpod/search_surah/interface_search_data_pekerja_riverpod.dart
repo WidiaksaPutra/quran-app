@@ -1,7 +1,7 @@
 abstract class InterfaceSearchDataPekerjaRiverpod{
-  Future<void> searchDataListSurah({
+  Future<void> SearchDataListSurah({
     required List listDataSurah, 
     required String searchSurah,
   });
-  List get listSurah;
+  List get ListSurah;
 }

@@ -2,7 +2,6 @@ abstract class InterfacesAyat{
   Future<List<Map<String, dynamic>>> getAyat();
   Future<int> deleteAyat({required String id});
   Future<int> insertAyat({
-    required String id,
     required String nomor,
     required String namaLatin ,
     required String teksArab,

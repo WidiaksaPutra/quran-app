@@ -2,7 +2,6 @@
 
 abstract class InterfaceInsertAyatSqlite{
   Future<void> InsertDataAyatSqlite({
-    required String id ,
     required String nomor ,
     required String namaLatin,
     required String teksArab,
@@ -10,5 +9,5 @@ abstract class InterfaceInsertAyatSqlite{
     required String teksLatin,
     required String teksIndonesia,
   });
-  bool get statusInsertSqlite;
+  bool get StatusInsertSqlite;
 }

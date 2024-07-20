@@ -2,5 +2,5 @@
 
 abstract class InterfaceGetAyatSqlite{
   Future<void> GetDataAyatSqlite();
-  List<Map<String, dynamic>> get dataAyatSqlite;
+  List<Map<String, dynamic>> get DataAyatSqlite;
 }

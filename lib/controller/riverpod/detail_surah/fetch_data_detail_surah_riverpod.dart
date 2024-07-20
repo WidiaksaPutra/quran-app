@@ -20,12 +20,12 @@ class FetchDataDetailSurahRiverpod extends StateNotifier<bool> implements Interf
   FetchDataDetailSurahRiverpod(this._dataDetailSurah) : super(false);
 
   @override
-  Future<void> fetchDataDetailSurah({required String nomor}) async {
+  Future<void> FetchDataDetailSurah({required String nomor}) async {
     state = true;
     _detailSurah = await _dataDetailSurah.fetchDataDetailSurah(nomor: nomor);
     state = false;
   }
 
   @override
-  get detailSurah => _detailSurah;
+  get DetailSurah => _detailSurah;
 }

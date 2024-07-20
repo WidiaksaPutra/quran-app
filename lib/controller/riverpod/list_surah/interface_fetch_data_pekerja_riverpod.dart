@@ -1,4 +1,4 @@
 abstract class InterfaceFetchDataListSurahRiverpord{
-  Future<void> fetchDataListSurah();
-  List? get listSurah;
+  Future<void> FetchDataListSurah();
+  List? get ListSurah;
 }

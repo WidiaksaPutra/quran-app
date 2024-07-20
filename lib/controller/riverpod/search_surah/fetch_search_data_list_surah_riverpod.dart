@@ -11,7 +11,7 @@ class FetchSearchDataListSurahRiverpord extends StateNotifier<bool> implements I
   FetchSearchDataListSurahRiverpord() : super(false);
 
   @override
-  Future<void> searchDataListSurah({
+  Future<void> SearchDataListSurah({
     required List listDataSurah,
     required String searchSurah,
   }) async{
@@ -28,5 +28,5 @@ class FetchSearchDataListSurahRiverpord extends StateNotifier<bool> implements I
   }
 
   @override
-  List get listSurah => _listSurah;
+  List get ListSurah => _listSurah;
 }

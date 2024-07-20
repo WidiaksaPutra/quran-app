@@ -6,20 +6,18 @@ class HelperAyat implements InterfacesAyat{
   @override
   Future<int> deleteAyat({required String id}) async{
     final db = await SqlAyat.db();
-    return await db.delete('ayat', where: "tokenId = '$id'");
+    return await db.delete('ayat', where:"id=$id");
   }
   
   @override
   Future<List<Map<String, dynamic>>> getAyat() async{
     final db = await SqlAyat.db();
     dynamic data = await db.query('ayat');
-    print("test sqlite get $data");
     return data;
   }
   
   @override
   Future<int> insertAyat({
-    required String id, 
     required String nomor, 
     required String namaLatin, 
     required String teksArab, 
@@ -27,10 +25,8 @@ class HelperAyat implements InterfacesAyat{
     required String teksLatin, 
     required String teksIndonesia,
   }) async {
-    print("test sqlite in $namaLatin");
     final db = await SqlAyat.db();
     final dataInsert = {
-      'id': id, 
       'nomor': nomor,
       'namaLatin': namaLatin,
       'teksArab': teksArab, 

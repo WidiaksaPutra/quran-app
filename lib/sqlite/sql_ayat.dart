@@ -4,13 +4,13 @@ class SqlAyat{
   static Future<void> createTableAyat(sql.Database database) async{
     await database.execute("""
       CREATE TABLE ayat(
-        id String,
-        nomor String,
-        namaLatin String,
-        teksArab String,
-        nomorAyat String,
-        teksLatin String,
-        teksIndonesia String
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nomor STRING,
+        namaLatin STRING,
+        teksArab TEXT,
+        nomorAyat STRING,
+        teksLatin TEXT,
+        teksIndonesia TEXT
       )
     """);
   }

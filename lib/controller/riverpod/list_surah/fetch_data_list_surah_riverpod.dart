@@ -19,12 +19,12 @@ class FetchDataListSurahRiverpord extends StateNotifier<bool> implements Interfa
   FetchDataListSurahRiverpord(this._dataDaftarSurah) : super(false);
 
   @override
-  Future<void> fetchDataListSurah() async {
+  Future<void> FetchDataListSurah() async {
     state = true;
     _listSurah = await _dataDaftarSurah.fetchDataDaftarSurah();
     state = false;
   }
   
   @override
-  List? get listSurah => _listSurah;
+  List? get ListSurah => _listSurah;
 }

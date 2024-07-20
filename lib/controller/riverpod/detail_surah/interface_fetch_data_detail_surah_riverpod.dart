@@ -1,4 +1,4 @@
 abstract class InterfaceFetchDataDetailSurahRiverpod{
-  Future<void> fetchDataDetailSurah({required String nomor});
-  dynamic get detailSurah;
+  Future<void> FetchDataDetailSurah({required String nomor});
+  dynamic get DetailSurah;
 }
