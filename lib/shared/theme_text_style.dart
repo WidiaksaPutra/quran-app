@@ -2,6 +2,8 @@ import 'package:app_quran/shared/theme_color.dart';
 import 'package:flutter/material.dart';
 
 TextStyle nullTextStyle = const TextStyle();
+TextStyle whiteQuranTextStyle = const TextStyle(color: kWhiteColor, fontFamily: "Misbah", decoration: TextDecoration.none);
+TextStyle purpleQuranTextStyle = const TextStyle(color: kPurpleColor, fontFamily: "Misbah", decoration: TextDecoration.none);
 TextStyle blackTextStyle = const TextStyle(color: kBlackColor7, fontFamily: "Poppins", decoration: TextDecoration.none);
 TextStyle whiteTextStyle = const TextStyle(color: kWhiteColor, fontFamily: "Poppins", decoration: TextDecoration.none);
 TextStyle grayTextStyle = const TextStyle(color: kBlackColor2, fontFamily: "Poppins", decoration: TextDecoration.none);

@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member, await_only_futures, use_build_context_synchronously, invalid_use_of_internal_member, no_leading_underscores_for_local_identifiers, prefer_const_constructors, unnecessary_null_comparison
 
+import 'package:app_quran/componen/componen_content_dialog(image_&_text).dart';
 import 'package:app_quran/componen/componen_content_dialog(image_&_title_text_&_button_text).dart';
 import 'package:app_quran/componen/componen_loading.dart';
 import 'package:app_quran/controller/mixin/mixin_dialog_basic.dart';
@@ -12,6 +13,8 @@ import 'package:app_quran/controller/riverpod/util/loading_riverpod.dart';
 import 'package:app_quran/routes/route_name.dart';
 import 'package:app_quran/shared/theme_box.dart';
 import 'package:app_quran/shared/theme_color.dart';
+import 'package:app_quran/shared/theme_font.dart';
+import 'package:app_quran/shared/theme_text_style.dart';
 import 'package:app_quran/ui/menu_home.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -29,16 +32,16 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ThemeBox(context);
-    getsizeDevice(context); 
-    final String nomor = ref.watch(dataNomorSurah).toString(); 
+    getsizeDevice(context);
+    final String _nomor = ref.watch(dataNomorSurah).toString();
     final bool _boolPlay = ref.watch(_audioPlay);
     final AudioPlayer _playAudio = ref.watch(_audioPlayer);
-    late String _namaLatin, _tempatTurun, _jumlahAyat, _arti;
+    late String _namaLatin, _tempatTurun, _jumlahAyat, _arti, _nama;
     if(ref.watch(_dataDetailAyat) == null){
       if(ref.watch(_statusDetailSurah) == true){
         Future.delayed(Duration.zero,() async{
           ref.read(_audioPlayer.notifier).state = await AudioPlayer();
-          await ref.watch(fetchDataDetailSurahRiverpod.notifier).FetchDataDetailSurah(nomor: nomor);
+          await ref.watch(fetchDataDetailSurahRiverpod.notifier).FetchDataDetailSurah(nomor: _nomor);
           ref.read(_dataDetailAyat.notifier).state = ref.watch(fetchDataDetailSurahRiverpod.notifier).DetailSurah;
           ref.read(isLoadingFetchDataDetailSurahRiverpod.notifier).state = ref.watch(fetchDataDetailSurahRiverpod.notifier).state;
           Future.delayed(const Duration(milliseconds: 1000), (){
@@ -52,6 +55,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
       _tempatTurun = ref.watch(_dataDetailAyat).tempatTurun.toString();
       _jumlahAyat = ref.watch(_dataDetailAyat).jumlahAyat.toString();
       _arti = ref.watch(_dataDetailAyat).arti.toString();
+      _nama = ref.watch(_dataDetailAyat).nama.toString();
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -61,7 +65,10 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
         : Column(
             children: [
               GestureDetector(
-                onTap: () => context.go(RouteName.menuHome),
+                onTap: () async{
+                  await ref.watch(audioAyatRiverpod.notifier).AyatAudioStop(result: _playAudio);
+                  context.go(RouteName.menuHome);
+                },
                 child: Expanded(
                   child: Container(
                     margin: EdgeInsets.symmetric(
@@ -82,10 +89,17 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(_namaLatin, style: TextStyle(color: Colors.white),),
-                          Text("$_tempatTurun . $_jumlahAyat Ayat . $_arti", style: TextStyle(color: Colors.white),),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(Icons.arrow_back_ios, color: Colors.white,),
+                              Text(_namaLatin, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: defaultFont15),),
+                              SizedBox(width: ThemeBox.defaultWidthBox30,)
+                            ],
+                          ),
+                          Text("$_tempatTurun . $_jumlahAyat Ayat . $_arti", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: defaultFont13),),
                           const Divider(),
-                          Text("text 3", style: TextStyle(color: Colors.white)),
+                          Text(_nama, style: whiteQuranTextStyle.copyWith(fontWeight: FontWeight.w100, fontSize: defaultFont54)),
                         ],
                       )
                   ),
@@ -117,7 +131,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                               ),
                               onTap: (){
                                 Future.delayed(Duration.zero,() async{
-                                  await ref.watch(fetchDataDetailTafsirRiverpod.notifier).fetchDataDetailSurah(nomor: nomor);
+                                  await ref.watch(fetchDataDetailTafsirRiverpod.notifier).fetchDataDetailSurah(nomor: _nomor);
                                   ref.read(_dataDetailTafsir.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).detailTafsir;
                                   ref.read(isLoadingFetchDataDetailTafsirRiverpod.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).state;
                                   Future.delayed(const Duration(milliseconds: 1000), (){
@@ -155,7 +169,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                                 ref.read(_audioPlay.notifier).state = !_boolPlay;
                                 (ref.watch(_audioPlay) == false)
                                 ? await ref.watch(audioAyatRiverpod.notifier).AyatAudioStop(result: _playAudio)
-                                : await ref.watch(audioAyatRiverpod.notifier).AyatAudioPlay(url: ref.watch(_dataDetailAyat).audioFull['02'], result: _playAudio);
+                                : await ref.watch(audioAyatRiverpod.notifier).AyatAudioPlay(url: ref.watch(_dataDetailAyat).audioFull['05'], result: _playAudio);
                               },
                             ),
                           ),
@@ -168,7 +182,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                         vertical: ThemeBox.defaultHeightBox13,
                       ),
                       child: SizedBox(
-                        height: sizeHeight - 240.0,
+                        height: sizeHeight - ThemeBox.defaultHeightBox280,
                         child: (ref.watch(_dataDetailAyat).ayat.length == 0)
                         ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
                         : ListView.builder(
@@ -200,13 +214,15 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                                         ],
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${ref.watch(_dataDetailAyat).nomor}:${ref.watch(_dataDetailAyat).ayat[index].nomorAyat}"),
-                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksArab),
+                                          Text("${ref.watch(_dataDetailAyat).nomor}:${ref.watch(_dataDetailAyat).ayat[index].nomorAyat}", style: TextStyle(color: kPurpleColor, fontWeight: FontWeight.w600)),
+                                          SizedBox(height: ThemeBox.defaultHeightBox20,),
+                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksArab, style: purpleQuranTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: defaultFont24), textAlign: TextAlign.right,),
+                                          SizedBox(height: ThemeBox.defaultHeightBox20,),
                                           Text(ref.watch(_dataDetailAyat).ayat[index].teksLatin),
-                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksIndonesia),
+                                          SizedBox(height: ThemeBox.defaultHeightBox10,),
+                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksIndonesia, style: TextStyle(color: kPurpleColor),),
                                         ],
                                       ),
                                     ),
@@ -219,9 +235,10 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                                         context: context, 
                                         closeIconStatus: false,
                                         barrierDismissible: true,
+                                        autoClose: false,
                                         contentDialog: ComponenContentDialog_ImageAndTitleTextAndButtonText(
                                           primaryColor: kGreenColor,
-                                          image: 'asset/animations/check_lottie.json', 
+                                          image: 'asset/animations/peringatan_lottie.json', 
                                           text: 'Apakah anda ingin menyimpan ayat ini ?', 
                                           textButton: 'Simpan',
                                           onTap: () async{
@@ -233,7 +250,38 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                                               teksLatin: ref.watch(_dataDetailAyat).ayat[index].teksLatin.toString(),
                                               teksIndonesia: ref.watch(_dataDetailAyat).ayat[index].teksIndonesia.toString(),
                                             );
-                                            Navigator.pop(context);    
+                                            Navigator.pop(context);
+                                            (ref.watch(insertAyatSqliteRiverpod.notifier).StatusInsertSqlite == true)
+                                            ? voidDialogBasic(
+                                                margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
+                                                padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
+                                                borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
+                                                color: kBlackColor6,
+                                                context: context, 
+                                                closeIconStatus: false,
+                                                barrierDismissible: true,
+                                                autoClose: true,
+                                                contentDialog: ComponenContentDialog_ImageAndTitleText(
+                                                  image: 'asset/animations/check_lottie.json', 
+                                                  text: 'Ayat Berhasil Disimpan',
+                                                ),
+                                                onTapCloseDialog: () => Navigator.pop(context),
+                                              )
+                                            : voidDialogBasic(
+                                                margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
+                                                padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
+                                                borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
+                                                color: kBlackColor6,
+                                                context: context, 
+                                                closeIconStatus: false,
+                                                barrierDismissible: true,
+                                                autoClose: true,
+                                                contentDialog: ComponenContentDialog_ImageAndTitleText(
+                                                  image: 'asset/animations/close_lottie.json', 
+                                                  text: 'Ayat Gagal Disimpan',
+                                                ),
+                                                onTapCloseDialog: () => Navigator.pop(context),
+                                              );
                                           },
                                         ), 
                                         onTapCloseDialog: () => Navigator.pop(context),
@@ -274,7 +322,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                             ),
                             onTap: (){
                               Future.delayed(Duration.zero,() async{
-                                await ref.watch(fetchDataDetailSurahRiverpod.notifier).FetchDataDetailSurah(nomor: nomor);
+                                await ref.watch(fetchDataDetailSurahRiverpod.notifier).FetchDataDetailSurah(nomor: _nomor);
                                 ref.read(_dataDetailAyat.notifier).state = ref.watch(fetchDataDetailSurahRiverpod.notifier).DetailSurah;
                                 ref.read(isLoadingFetchDataDetailSurahRiverpod.notifier).state = ref.watch(fetchDataDetailSurahRiverpod.notifier).state;
                                 Future.delayed(const Duration(milliseconds: 1000), (){
@@ -292,7 +340,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                           vertical: ThemeBox.defaultHeightBox13,
                         ),
                         child: SizedBox(
-                          height: sizeHeight - 240.0,
+                          height: sizeHeight - ThemeBox.defaultHeightBox280,
                           child: (ref.watch(_dataDetailTafsir).tafsir.length == 0)
                           ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
                           : ListView.builder(
@@ -326,8 +374,9 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("Ayat ${ref.watch(_dataDetailTafsir).tafsir[index].ayat}"),
-                                          Text(ref.watch(_dataDetailTafsir).tafsir[index].teks),
+                                          Text("Ayat ${ref.watch(_dataDetailTafsir).tafsir[index].ayat}", style: TextStyle(color:kPurpleColor, fontWeight: FontWeight.w600),),
+                                          SizedBox(height: ThemeBox.defaultHeightBox10,),
+                                          Text(ref.watch(_dataDetailTafsir).tafsir[index].teks, style: TextStyle(color:kPurpleColor),),
                                         ],
                                       ),
                                     ),

@@ -90,5 +90,8 @@ flutter:
       fonts:
         - asset: asset/font/Poppins-Black.ttf
         - asset: asset/font/Poppins-BlackItalic.ttf
+    - family: Misbah
+      fonts:
+        - asset: asset/font/LPMQ-Isep-Misbah.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

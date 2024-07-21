@@ -65,6 +65,8 @@ class ThemeBox with SizeDevice{
   static late double defaultHeightBox300;
   static late double defaultHeightBox140;
   static late double defaultHeightBox170;
+  static late double defaultHeightBox280;
+  static late double defaultHeightBox260;
 
   //width
   static late double defaultWidthBox152;
@@ -161,6 +163,9 @@ class ThemeBox with SizeDevice{
     defaultHeightBox300 = getHaight(300.0).h;
     defaultHeightBox140 = getHaight(140.0).h;
     defaultHeightBox170 = getHaight(170.0).h;
+    defaultHeightBox280 = getHaight(280.0).h;
+    defaultHeightBox260 = getHaight(260.0).h;
+    
     //width
     defaultWidthBox152 = getWidth(152.0).w;
     defaultWidthBox70 = getWidth(70.0).w;

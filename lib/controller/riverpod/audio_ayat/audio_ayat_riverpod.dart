@@ -12,13 +12,11 @@ class AudioAyatRiverpod extends StateNotifier<bool>{
   
   @override
   Future<void> AyatAudioPlay({required String url, required AudioPlayer result}) async {
-    print("test river audio");
     await result.play(UrlSource(url));
   }
 
   @override
   Future<void> AyatAudioStop({required AudioPlayer result}) async {
-    print("test river pause");
     await result.pause();
   }
 }

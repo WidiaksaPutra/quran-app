@@ -10,12 +10,12 @@ import 'package:app_quran/shared/theme_box.dart';
 import 'package:app_quran/shared/theme_color.dart';
 import 'package:app_quran/shared/theme_font.dart';
 import 'package:app_quran/shared/theme_global_variabel.dart';
+import 'package:app_quran/shared/theme_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 final _dataMenuHome = StateProvider.autoDispose<List?>((ref) => null);
-final dataNomorSurah = StateProvider.autoDispose<String>((ref) => "");
 
 class MenuHome extends ConsumerWidget with SizeDevice{
   MenuHome({super.key});
@@ -62,7 +62,7 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: ThemeBox.defaultHeightBox20),
-                        Text("text 1", style: TextStyle(color: Colors.white),),
+                        Text(formatDayArab.format(DateTime.now()), style: whiteQuranTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: defaultFont24),),
                         Text(formatDay.format(DateTime.now()), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
                         Text(formatDateShort.format(DateTime.now()), style: TextStyle(color: Colors.white),),
                       ],
@@ -139,7 +139,7 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                     vertical: ThemeBox.defaultHeightBox13,
                   ),
                   child: SizedBox(
-                    height: sizeHeight - 240.0,
+                    height: sizeHeight - ThemeBox.defaultHeightBox260,
                     child: (ref.watch(isLoadingFetchDataListSurahRiverpod) == true)
                     ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
                     : ListView.separated(
@@ -147,28 +147,29 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                         separatorBuilder: (BuildContext context, int index) => Divider(color:Colors.grey),
                         itemBuilder: (context, index){
                           return GestureDetector(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(index.toString()),
-                                    SizedBox(width: ThemeBox.defaultWidthBox10,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(ref.watch(_dataMenuHome)![index].namaLatin),
-                                        Text("${ref.watch(_dataMenuHome)![index].tempatTurun} . ${ref.watch(_dataMenuHome)![index].arti}"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Text(ref.watch(_dataMenuHome)![index].nama),
-                              ],
+                            child: Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(ref.watch(_dataMenuHome)![index].nomor.toString(), overflow: TextOverflow.ellipsis),
+                                      SizedBox(width: ThemeBox.defaultWidthBox10,),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(ref.watch(_dataMenuHome)![index].namaLatin, style: TextStyle(fontWeight: FontWeight.w900, fontSize: defaultFont16), overflow: TextOverflow.ellipsis,),
+                                          Text("${ref.watch(_dataMenuHome)![index].tempatTurun} . ${ref.watch(_dataMenuHome)![index].arti}", style: TextStyle(color: kGreyColor2, fontSize: defaultFont13, fontWeight: FontWeight.w600), maxLines: 3, overflow: TextOverflow.ellipsis,),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Flexible(child: Text(ref.watch(_dataMenuHome)![index].nama, style: purpleQuranTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: defaultFont24), overflow: TextOverflow.ellipsis,)),
+                                ],
+                              ),
                             ),
                             onTap: () async{
                               ref.read(dataNomorSurah.notifier).state = await ref.watch(_dataMenuHome)![index].nomor.toString();
-                              Future.delayed(Duration(milliseconds: 1000));
                               if(ref.watch(dataNomorSurah) != ""){
                                 context.go(RouteName.detailSurah);
                               }
