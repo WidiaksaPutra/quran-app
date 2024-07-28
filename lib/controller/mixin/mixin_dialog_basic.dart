@@ -45,7 +45,7 @@ mixin DialogBasic{
                     ),
                   ),
                 ],
-                contentDialog
+                Flexible(child: contentDialog)
               ],
             ),
           ),

@@ -16,7 +16,6 @@ import 'package:app_quran/shared/theme_font.dart';
 import 'package:app_quran/shared/theme_text_style.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -60,7 +59,7 @@ class Detail extends ConsumerWidget with DialogBasic{
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: (ref.watch(_dataDetailAyat) == null || ref.watch(isLoadingFetchDataDetailSurahRiverpod) == true)
-        ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+        ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
         : Column(
             children: [
               GestureDetector(
@@ -83,7 +82,7 @@ class Detail extends ConsumerWidget with DialogBasic{
                       borderRadius: BorderRadius.circular(ThemeBox.defaultRadius15)
                     ),
                     child: (_namaLatin == null)
-                    ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                    ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -184,7 +183,7 @@ class Detail extends ConsumerWidget with DialogBasic{
                             right: ThemeBox.defaultWidthBox13,
                           ),
                           child: (ref.watch(_dataDetailAyat).ayat.length == 0)
-                          ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                          ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
                           : ListView.builder(
                             itemCount: ref.watch(_dataDetailAyat).ayat.length,
                             itemBuilder: (context, index){
@@ -296,7 +295,7 @@ class Detail extends ConsumerWidget with DialogBasic{
                   ),
                 )
               : (ref.watch(_dataDetailTafsir) == null)
-                ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
                 : Flexible(
                     child: Column(
                     children: [
@@ -341,7 +340,7 @@ class Detail extends ConsumerWidget with DialogBasic{
                             top: ThemeBox.defaultHeightBox13,
                           ),
                           child: (ref.watch(_dataDetailTafsir).tafsir.length == 0)
-                          ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                          ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
                           : ListView.builder(
                             itemCount: ref.watch(_dataDetailTafsir).tafsir.length,
                             itemBuilder: (context, index){

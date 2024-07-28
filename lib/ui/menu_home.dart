@@ -46,7 +46,7 @@ class MenuHome extends ConsumerWidget{
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: (ref.watch(_dataMenuHome) == null || ref.watch(isLoadingFetchDataListSurahRiverpod) == true)
-          ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+          ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
           : Column(
               children: [
                 Container(
@@ -154,7 +154,7 @@ class MenuHome extends ConsumerWidget{
                     //   height: mediaQ.height - ref.watch(_contentHeight),
                     //   child: 
                       (ref.watch(isLoadingFetchDataListSurahRiverpod) == true)
-                      ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                      ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
                       : ListView.separated(
                           itemCount: ref.watch(_dataMenuHome)!.length,
                           separatorBuilder: (BuildContext context, int index) => Divider(color:Colors.grey),

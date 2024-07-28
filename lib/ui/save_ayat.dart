@@ -39,7 +39,7 @@ class SaveAyat extends ConsumerWidget with DialogBasic{
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: (ref.watch(_dataAyat) == null || ref.watch(isLoadingFetchDataDetailSurahRiverpod) == true)
-        ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+        ? Flexible(child: Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200)))
         : Column(
             children: [
               GestureDetector(
