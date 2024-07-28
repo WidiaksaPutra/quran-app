@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_init_to_null, prefer_final_fields
 import 'package:app_quran/controller/riverpod/list_surah/interface_fetch_data_pekerja_riverpod.dart';
 import 'package:app_quran/service/daftar_surah/interfaces_daftar_surah.dart';
-import 'package:app_quran/shared/theme_konstanta.dart';
+import 'package:app_quran/shared/theme_global_variabel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final interfaceFetchDataListSurahProvider = Provider<InterfacesDaftarSurah>((ref) {

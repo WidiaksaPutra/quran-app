@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
 
 import 'package:app_quran/controller/riverpod/ayat_sqlite/get_ayat/interface_get_ayat_sqlite_riverpod.dart';
-import 'package:app_quran/shared/theme_konstanta.dart';
+import 'package:app_quran/shared/theme_global_variabel.dart';
 import 'package:app_quran/sqlite/interfaces_ayat.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

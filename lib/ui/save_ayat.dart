@@ -5,7 +5,6 @@ import 'package:app_quran/componen/componen_content_dialog(image_&_text).dart';
 import 'package:app_quran/componen/componen_content_dialog(image_&_title_text_&_button_text).dart';
 import 'package:app_quran/componen/componen_loading.dart';
 import 'package:app_quran/controller/mixin/mixin_dialog_basic.dart';
-import 'package:app_quran/controller/mixin/mixin_size_device.dart';
 import 'package:app_quran/controller/riverpod/ayat_sqlite/delete_ayat/delete_ayat_sqlite_riverpod.dart';
 import 'package:app_quran/controller/riverpod/detail_surah/fetch_data_detail_surah_riverpod.dart';
 import 'package:app_quran/controller/riverpod/ayat_sqlite/get_ayat/get_ayat_sqlite_riverpod.dart';
@@ -20,13 +19,12 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _dataAyat = StateProvider.autoDispose<dynamic>((ref) => null);
-class SaveAyat extends ConsumerWidget with SizeDevice, DialogBasic{
+class SaveAyat extends ConsumerWidget with DialogBasic{
   SaveAyat({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ThemeBox(context);
-    getsizeDevice(context);
+    Size mediaQ = MediaQuery.of(context).size;
     if(ref.watch(_dataAyat) == null){
       Future.delayed(Duration.zero,() async{
         await ref.watch(getAyatSqliteRiverpod.notifier).GetDataAyatSqlite();
@@ -70,13 +68,13 @@ class SaveAyat extends ConsumerWidget with SizeDevice, DialogBasic{
                 ),
                 onTap: () => context.go(RouteName.menuHome),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: ThemeBox.defaultWidthBox13,
-                  vertical: ThemeBox.defaultHeightBox13,
-                ),
-                child: SizedBox(
-                  height: sizeHeight - ThemeBox.defaultHeightBox120,
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: ThemeBox.defaultWidthBox13,
+                    right: ThemeBox.defaultWidthBox13,
+                    top: ThemeBox.defaultHeightBox13,
+                  ),
                   child: ListView.builder(
                     itemCount: ref.watch(_dataAyat).length,
                     itemBuilder: (context, index) => Row(
@@ -120,8 +118,7 @@ class SaveAyat extends ConsumerWidget with SizeDevice, DialogBasic{
                                           content: Text("Hapus", style: TextStyle(color: kWhiteColor, fontWeight: FontWeight.w400),),
                                           onPressed: (){
                                             voidDialogBasic(
-                                              margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
-                                              padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
+                                              padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, bottom: ThemeBox.defaultHeightBox30),
                                               borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
                                               color: kBlackColor6,
                                               context: context, 
@@ -146,8 +143,7 @@ class SaveAyat extends ConsumerWidget with SizeDevice, DialogBasic{
                                                   Navigator.pop(context);
                                                   (ref.watch(deleteAyatSqliteRiverpod.notifier).StatusDeleteSqlite == true)
                                                   ? voidDialogBasic(
-                                                      margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
-                                                      padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
+                                                      padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, bottom: ThemeBox.defaultHeightBox30),
                                                       borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
                                                       color: kBlackColor6,
                                                       context: context, 
@@ -161,8 +157,7 @@ class SaveAyat extends ConsumerWidget with SizeDevice, DialogBasic{
                                                       onTapCloseDialog: () => Navigator.pop(context),
                                                     )
                                                   : voidDialogBasic(
-                                                      margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
-                                                      padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
+                                                      padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, bottom: ThemeBox.defaultHeightBox30),
                                                       borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
                                                       color: kBlackColor6,
                                                       context: context, 

@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, must_be_immutable, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member, prefer_final_fields, await_only_futures, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, must_be_immutable, invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member, prefer_final_fields, await_only_futures, use_build_context_synchronously, prefer_const_constructors_in_immutables, no_leading_underscores_for_local_identifiers
 
 import 'package:app_quran/componen/componen_loading.dart';
-import 'package:app_quran/controller/mixin/mixin_size_device.dart';
 import 'package:app_quran/controller/riverpod/list_surah/fetch_data_list_surah_riverpod.dart';
 import 'package:app_quran/controller/riverpod/search_surah/fetch_search_data_list_surah_riverpod.dart';
 import 'package:app_quran/controller/riverpod/util/loading_riverpod.dart';
@@ -16,14 +15,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 final _dataMenuHome = StateProvider.autoDispose<List?>((ref) => null);
-
-class MenuHome extends ConsumerWidget with SizeDevice{
+// final _contentHeight = StateProvider.autoDispose<double>((ref) => 0.0);
+class MenuHome extends ConsumerWidget{
   MenuHome({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ThemeBox(context);
-    getsizeDevice(context);
+    // final GlobalKey _keyContinerCardTitle = GlobalKey();
+    // final GlobalKey _keyPaddingFilterSearch = GlobalKey();
+    // Size mediaQ = MediaQuery.of(context).size;
     if(ref.watch(_dataMenuHome) == null){
       Future.delayed(Duration.zero, () async{
         await ref.watch(fetchDataListSurahRiverpod.notifier).FetchDataListSurah();
@@ -35,6 +35,13 @@ class MenuHome extends ConsumerWidget with SizeDevice{
       });
     }
 
+    // WidgetsBinding.instance.addPostFrameCallback((_){
+    //   final RenderBox _renderBoxContinerCardTitle = _keyContinerCardTitle.currentContext!.findRenderObject() as RenderBox;
+    //   final RenderBox _renderBoxPaddingFilterSearch = _keyPaddingFilterSearch.currentContext!.findRenderObject() as RenderBox;
+    //   ref.read(_contentHeight.notifier).state = _renderBoxContinerCardTitle.size.height + _renderBoxPaddingFilterSearch.size.height + ThemeBox.defaultHeightBox13;
+    //   // + ThemeBox.defaultHeightBox27_62
+    // });
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -43,6 +50,7 @@ class MenuHome extends ConsumerWidget with SizeDevice{
           : Column(
               children: [
                 Container(
+                  // key: _keyContinerCardTitle,
                   margin: EdgeInsets.symmetric(
                     horizontal: ThemeBox.defaultWidthBox10,
                     vertical: ThemeBox.defaultHeightBox10,
@@ -70,6 +78,7 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                   ),
                 ),
                 Padding(
+                  // key: _keyPaddingFilterSearch,
                   padding: EdgeInsets.symmetric(
                     horizontal: ThemeBox.defaultWidthBox10,
                   ),
@@ -133,21 +142,24 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ThemeBox.defaultWidthBox13,
-                    vertical: ThemeBox.defaultHeightBox13,
-                  ),
-                  child: SizedBox(
-                    height: sizeHeight - ThemeBox.defaultHeightBox260,
-                    child: (ref.watch(isLoadingFetchDataListSurahRiverpod) == true)
-                    ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
-                    : ListView.separated(
-                        itemCount: ref.watch(_dataMenuHome)!.length,
-                        separatorBuilder: (BuildContext context, int index) => Divider(color:Colors.grey),
-                        itemBuilder: (context, index){
-                          return GestureDetector(
-                            child: Expanded(
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: ThemeBox.defaultWidthBox13,
+                      right: ThemeBox.defaultWidthBox13,
+                      top: ThemeBox.defaultHeightBox13,
+                    ),
+                    child: 
+                    // SizedBox(
+                    //   height: mediaQ.height - ref.watch(_contentHeight),
+                    //   child: 
+                      (ref.watch(isLoadingFetchDataListSurahRiverpod) == true)
+                      ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                      : ListView.separated(
+                          itemCount: ref.watch(_dataMenuHome)!.length,
+                          separatorBuilder: (BuildContext context, int index) => Divider(color:Colors.grey),
+                          itemBuilder: (context, index){
+                            return GestureDetector(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -167,16 +179,16 @@ class MenuHome extends ConsumerWidget with SizeDevice{
                                   Flexible(child: Text(ref.watch(_dataMenuHome)![index].nama, style: purpleQuranTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: defaultFont24), overflow: TextOverflow.ellipsis,)),
                                 ],
                               ),
-                            ),
-                            onTap: () async{
-                              ref.read(dataNomorSurah.notifier).state = await ref.watch(_dataMenuHome)![index].nomor.toString();
-                              if(ref.watch(dataNomorSurah) != ""){
-                                context.go(RouteName.detailSurah);
+                              onTap: () async{
+                                ref.read(dataNomorSurah.notifier).state = await ref.watch(_dataMenuHome)![index].nomor.toString();
+                                if(ref.watch(dataNomorSurah) != ""){
+                                  context.go(RouteName.detailSurah);
+                                }
                               }
-                            }
-                          );
-                        },
-                      ),
+                            );
+                          },
+                        ),
+                    // ),
                   ),
                 ),
               ],

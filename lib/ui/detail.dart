@@ -4,7 +4,6 @@ import 'package:app_quran/componen/componen_content_dialog(image_&_text).dart';
 import 'package:app_quran/componen/componen_content_dialog(image_&_title_text_&_button_text).dart';
 import 'package:app_quran/componen/componen_loading.dart';
 import 'package:app_quran/controller/mixin/mixin_dialog_basic.dart';
-import 'package:app_quran/controller/mixin/mixin_size_device.dart';
 import 'package:app_quran/controller/riverpod/audio_ayat/audio_ayat_riverpod.dart';
 import 'package:app_quran/controller/riverpod/detail_surah/fetch_data_detail_surah_riverpod.dart';
 import 'package:app_quran/controller/riverpod/detail_tafsir/fetch_data_detail_tafsir_riverpod.dart';
@@ -15,9 +14,9 @@ import 'package:app_quran/shared/theme_box.dart';
 import 'package:app_quran/shared/theme_color.dart';
 import 'package:app_quran/shared/theme_font.dart';
 import 'package:app_quran/shared/theme_text_style.dart';
-import 'package:app_quran/ui/menu_home.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,17 +25,16 @@ final _dataDetailAyat = StateProvider.autoDispose<dynamic>((ref) => null);
 final _dataDetailTafsir = StateProvider.autoDispose<dynamic>((ref) => null);
 final _audioPlay = StateProvider.autoDispose<bool>((ref) => false);
 final _audioPlayer = StateProvider.autoDispose<AudioPlayer>((ref) => AudioPlayer());
-class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
+class Detail extends ConsumerWidget with DialogBasic{
   Detail({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ThemeBox(context);
-    getsizeDevice(context);
     final String _nomor = ref.watch(dataNomorSurah).toString();
     final bool _boolPlay = ref.watch(_audioPlay);
     final AudioPlayer _playAudio = ref.watch(_audioPlayer);
     late String _namaLatin, _tempatTurun, _jumlahAyat, _arti, _nama;
+    
     if(ref.watch(_dataDetailAyat) == null){
       if(ref.watch(_statusDetailSurah) == true){
         Future.delayed(Duration.zero,() async{
@@ -57,6 +55,7 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
       _arti = ref.watch(_dataDetailAyat).arti.toString();
       _nama = ref.watch(_dataDetailAyat).nama.toString();
     }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -106,200 +105,200 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                 ),
               ),
               (ref.watch(_statusDetailSurah) == true)
-              ? Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ThemeBox.defaultWidthBox10,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: ThemeBox.defaultHeightBox5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: kPurpleColor,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(ThemeBox.defaultRadius15),
-                                    bottomLeft: Radius.circular(ThemeBox.defaultRadius15),
+              ? Flexible(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ThemeBox.defaultWidthBox10,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: ThemeBox.defaultHeightBox5,
                                   ),
-                                ),
-                                child: const Center(child: Text("Lihat Tafsir", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),)),
-                              ),
-                              onTap: (){
-                                Future.delayed(Duration.zero,() async{
-                                  await ref.watch(fetchDataDetailTafsirRiverpod.notifier).fetchDataDetailSurah(nomor: _nomor);
-                                  ref.read(_dataDetailTafsir.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).detailTafsir;
-                                  ref.read(isLoadingFetchDataDetailTafsirRiverpod.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).state;
-                                  Future.delayed(const Duration(milliseconds: 1000), (){
-                                    ref.read(isLoadingFetchDataDetailTafsirRiverpod.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).state;
-                                  });
-                                });
-                                ref.read(_statusDetailSurah.notifier).state = false;
-                              },
-                            ),
-                          ),
-                          SizedBox(width: ThemeBox.defaultWidthBox5),
-                          Expanded(
-                            child: GestureDetector(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: ThemeBox.defaultHeightBox5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: kPurpleColor,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(ThemeBox.defaultRadius15),
-                                    bottomRight: Radius.circular(ThemeBox.defaultRadius15),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    (ref.watch(_audioPlay) == true) ? const Icon(Icons.pause, color: kWhiteColor) : Icon(Icons.play_arrow, color: kWhiteColor),
-                                    const Text("Play Audio", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
-                                    const SizedBox()
-                                  ],
-                                ),
-                              ),
-                              onTap: () async{
-                                ref.read(_audioPlay.notifier).state = !_boolPlay;
-                                (ref.watch(_audioPlay) == false)
-                                ? await ref.watch(audioAyatRiverpod.notifier).AyatAudioStop(result: _playAudio)
-                                : await ref.watch(audioAyatRiverpod.notifier).AyatAudioPlay(url: ref.watch(_dataDetailAyat).audioFull['05'], result: _playAudio);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ThemeBox.defaultWidthBox13,
-                        vertical: ThemeBox.defaultHeightBox13,
-                      ),
-                      child: SizedBox(
-                        height: sizeHeight - ThemeBox.defaultHeightBox280,
-                        child: (ref.watch(_dataDetailAyat).ayat.length == 0)
-                        ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
-                        : ListView.builder(
-                          itemCount: ref.watch(_dataDetailAyat).ayat.length,
-                          itemBuilder: (context, index){
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: ThemeBox.defaultWidthBox10,
-                                        vertical: ThemeBox.defaultHeightBox10,
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: ThemeBox.defaultHeightBox10,
-                                        horizontal: ThemeBox.defaultHeightBox20,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: kWhiteColor,
-                                        borderRadius: BorderRadius.circular(ThemeBox.defaultRadius15),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: kGreyColor5,
-                                            spreadRadius: 0.5,
-                                            blurRadius: 3,
-                                            offset: Offset(0, 3)
-                                          )
-                                        ],
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("${ref.watch(_dataDetailAyat).nomor}:${ref.watch(_dataDetailAyat).ayat[index].nomorAyat}", style: TextStyle(color: kPurpleColor, fontWeight: FontWeight.w600)),
-                                          SizedBox(height: ThemeBox.defaultHeightBox20,),
-                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksArab, style: purpleQuranTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: defaultFont24), textAlign: TextAlign.right,),
-                                          SizedBox(height: ThemeBox.defaultHeightBox20,),
-                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksLatin),
-                                          SizedBox(height: ThemeBox.defaultHeightBox10,),
-                                          Text(ref.watch(_dataDetailAyat).ayat[index].teksIndonesia, style: TextStyle(color: kPurpleColor),),
-                                        ],
-                                      ),
+                                  decoration: BoxDecoration(
+                                    color: kPurpleColor,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(ThemeBox.defaultRadius15),
+                                      bottomLeft: Radius.circular(ThemeBox.defaultRadius15),
                                     ),
-                                    onTap: () {
-                                      voidDialogBasic(
-                                        margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
-                                        padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
-                                        borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
-                                        color: kBlackColor6,
-                                        context: context, 
-                                        closeIconStatus: false,
-                                        barrierDismissible: true,
-                                        autoClose: false,
-                                        contentDialog: ComponenContentDialog_ImageAndTitleTextAndButtonText(
-                                          primaryColor: kGreenColor,
-                                          image: 'asset/animations/peringatan_lottie.json', 
-                                          text: 'Apakah anda ingin menyimpan ayat ini ?', 
-                                          textButton: 'Simpan',
-                                          onTap: () async{
-                                            await ref.watch(insertAyatSqliteRiverpod.notifier).InsertDataAyatSqlite(
-                                              nomor: ref.watch(_dataDetailAyat).nomor.toString(), 
-                                              namaLatin: ref.watch(_dataDetailAyat).namaLatin,
-                                              teksArab: ref.watch(_dataDetailAyat).ayat[index].teksArab.toString(),
-                                              nomorAyat: ref.watch(_dataDetailAyat).ayat[index].nomorAyat.toString(), 
-                                              teksLatin: ref.watch(_dataDetailAyat).ayat[index].teksLatin.toString(),
-                                              teksIndonesia: ref.watch(_dataDetailAyat).ayat[index].teksIndonesia.toString(),
-                                            );
-                                            Navigator.pop(context);
-                                            (ref.watch(insertAyatSqliteRiverpod.notifier).StatusInsertSqlite == true)
-                                            ? voidDialogBasic(
-                                                margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
-                                                padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
-                                                borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
-                                                color: kBlackColor6,
-                                                context: context, 
-                                                closeIconStatus: false,
-                                                barrierDismissible: true,
-                                                autoClose: true,
-                                                contentDialog: ComponenContentDialog_ImageAndTitleText(
-                                                  image: 'asset/animations/check_lottie.json', 
-                                                  text: 'Ayat Berhasil Disimpan',
-                                                ),
-                                                onTapCloseDialog: () => Navigator.pop(context),
-                                              )
-                                            : voidDialogBasic(
-                                                margin: EdgeInsets.symmetric(horizontal: ThemeBox.defaultWidthBox30, vertical: MediaQuery.of(context).size.height * 0.3),
-                                                padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, top: ThemeBox.defaultHeightBox30),
-                                                borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
-                                                color: kBlackColor6,
-                                                context: context, 
-                                                closeIconStatus: false,
-                                                barrierDismissible: true,
-                                                autoClose: true,
-                                                contentDialog: ComponenContentDialog_ImageAndTitleText(
-                                                  image: 'asset/animations/close_lottie.json', 
-                                                  text: 'Ayat Gagal Disimpan',
-                                                ),
-                                                onTapCloseDialog: () => Navigator.pop(context),
-                                              );
-                                          },
-                                        ), 
-                                        onTapCloseDialog: () => Navigator.pop(context),
-                                      );
-                                    },
+                                  ),
+                                  child: const Center(child: Text("Lihat Tafsir", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),)),
+                                ),
+                                onTap: (){
+                                  Future.delayed(Duration.zero,() async{
+                                    await ref.watch(fetchDataDetailTafsirRiverpod.notifier).fetchDataDetailSurah(nomor: _nomor);
+                                    ref.read(_dataDetailTafsir.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).detailTafsir;
+                                    ref.read(isLoadingFetchDataDetailTafsirRiverpod.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).state;
+                                    Future.delayed(const Duration(milliseconds: 1000), (){
+                                      ref.read(isLoadingFetchDataDetailTafsirRiverpod.notifier).state = ref.watch(fetchDataDetailTafsirRiverpod.notifier).state;
+                                    });
+                                  });
+                                  ref.read(_statusDetailSurah.notifier).state = false;
+                                },
+                              ),
+                            ),
+                            SizedBox(width: ThemeBox.defaultWidthBox5),
+                            Expanded(
+                              child: GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: ThemeBox.defaultHeightBox5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: kPurpleColor,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(ThemeBox.defaultRadius15),
+                                      bottomRight: Radius.circular(ThemeBox.defaultRadius15),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      (ref.watch(_audioPlay) == true) ? const Icon(Icons.pause, color: kWhiteColor) : Icon(Icons.play_arrow, color: kWhiteColor),
+                                      const Text("Play Audio", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
+                                      const SizedBox()
+                                    ],
                                   ),
                                 ),
-                              ],
-                            );
-                          },
+                                onTap: () async{
+                                  ref.read(_audioPlay.notifier).state = !_boolPlay;
+                                  (ref.watch(_audioPlay) == false)
+                                  ? await ref.watch(audioAyatRiverpod.notifier).AyatAudioStop(result: _playAudio)
+                                  : await ref.watch(audioAyatRiverpod.notifier).AyatAudioPlay(url: ref.watch(_dataDetailAyat).audioFull['05'], result: _playAudio);
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),   
-                  ],
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: ThemeBox.defaultHeightBox13,
+                            left: ThemeBox.defaultWidthBox13,
+                            right: ThemeBox.defaultWidthBox13,
+                          ),
+                          child: (ref.watch(_dataDetailAyat).ayat.length == 0)
+                          ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
+                          : ListView.builder(
+                            itemCount: ref.watch(_dataDetailAyat).ayat.length,
+                            itemBuilder: (context, index){
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: ThemeBox.defaultWidthBox10,
+                                          vertical: ThemeBox.defaultHeightBox10,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: ThemeBox.defaultHeightBox10,
+                                          horizontal: ThemeBox.defaultHeightBox20,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: kWhiteColor,
+                                          borderRadius: BorderRadius.circular(ThemeBox.defaultRadius15),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: kGreyColor5,
+                                              spreadRadius: 0.5,
+                                              blurRadius: 3,
+                                              offset: Offset(0, 3)
+                                            )
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("${ref.watch(_dataDetailAyat).nomor}:${ref.watch(_dataDetailAyat).ayat[index].nomorAyat}", style: TextStyle(color: kPurpleColor, fontWeight: FontWeight.w600)),
+                                            SizedBox(height: ThemeBox.defaultHeightBox20,),
+                                            Text(ref.watch(_dataDetailAyat).ayat[index].teksArab, style: purpleQuranTextStyle.copyWith(fontWeight: FontWeight.w600, fontSize: defaultFont24), textAlign: TextAlign.right,),
+                                            SizedBox(height: ThemeBox.defaultHeightBox20,),
+                                            Text(ref.watch(_dataDetailAyat).ayat[index].teksLatin),
+                                            SizedBox(height: ThemeBox.defaultHeightBox10,),
+                                            Text(ref.watch(_dataDetailAyat).ayat[index].teksIndonesia, style: TextStyle(color: kPurpleColor),),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        voidDialogBasic(
+                                          padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, bottom: ThemeBox.defaultHeightBox30),
+                                          borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
+                                          color: kBlackColor6,
+                                          context: context, 
+                                          closeIconStatus: false,
+                                          barrierDismissible: true,
+                                          autoClose: false,
+                                          contentDialog: ComponenContentDialog_ImageAndTitleTextAndButtonText(
+                                            primaryColor: kGreenColor,
+                                            image: 'asset/animations/peringatan_lottie.json', 
+                                            text: 'Apakah anda ingin menyimpan ayat ini ?', 
+                                            textButton: 'Simpan',
+                                            onTap: () async{
+                                              await ref.watch(insertAyatSqliteRiverpod.notifier).InsertDataAyatSqlite(
+                                                nomor: ref.watch(_dataDetailAyat).nomor.toString(), 
+                                                namaLatin: ref.watch(_dataDetailAyat).namaLatin,
+                                                teksArab: ref.watch(_dataDetailAyat).ayat[index].teksArab.toString(),
+                                                nomorAyat: ref.watch(_dataDetailAyat).ayat[index].nomorAyat.toString(), 
+                                                teksLatin: ref.watch(_dataDetailAyat).ayat[index].teksLatin.toString(),
+                                                teksIndonesia: ref.watch(_dataDetailAyat).ayat[index].teksIndonesia.toString(),
+                                              );
+                                              Navigator.pop(context);
+                                              (ref.watch(insertAyatSqliteRiverpod.notifier).StatusInsertSqlite == true)
+                                              ? voidDialogBasic(
+                                                  padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, bottom: ThemeBox.defaultHeightBox30),
+                                                  borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
+                                                  color: kBlackColor6,
+                                                  context: context, 
+                                                  closeIconStatus: false,
+                                                  barrierDismissible: true,
+                                                  autoClose: true,
+                                                  contentDialog: ComponenContentDialog_ImageAndTitleText(
+                                                    image: 'asset/animations/check_lottie.json', 
+                                                    text: 'Ayat Berhasil Disimpan',
+                                                  ),
+                                                  onTapCloseDialog: () => Navigator.pop(context),
+                                                )
+                                              : voidDialogBasic(
+                                                  padding: EdgeInsets.only(left: ThemeBox.defaultWidthBox30, right: ThemeBox.defaultWidthBox30, bottom: ThemeBox.defaultHeightBox30),
+                                                  borderRadius: BorderRadius.circular(ThemeBox.defaultRadius10),
+                                                  color: kBlackColor6,
+                                                  context: context, 
+                                                  closeIconStatus: false,
+                                                  barrierDismissible: true,
+                                                  autoClose: true,
+                                                  contentDialog: ComponenContentDialog_ImageAndTitleText(
+                                                    image: 'asset/animations/close_lottie.json', 
+                                                    text: 'Ayat Gagal Disimpan',
+                                                  ),
+                                                  onTapCloseDialog: () => Navigator.pop(context),
+                                                );
+                                            },
+                                          ), 
+                                          onTapCloseDialog: () => Navigator.pop(context), 
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               : (ref.watch(_dataDetailTafsir) == null)
                 ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
-                : Column(
+                : Flexible(
+                    child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -334,13 +333,13 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ThemeBox.defaultWidthBox13,
-                          vertical: ThemeBox.defaultHeightBox13,
-                        ),
-                        child: SizedBox(
-                          height: sizeHeight - ThemeBox.defaultHeightBox280,
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: ThemeBox.defaultWidthBox13,
+                            right: ThemeBox.defaultWidthBox13,
+                            top: ThemeBox.defaultHeightBox13,
+                          ),
                           child: (ref.watch(_dataDetailTafsir).tafsir.length == 0)
                           ? Center(child: ComponenLoadingLottieBasic(height: ThemeBox.defaultHeightBox200))
                           : ListView.builder(
@@ -386,9 +385,10 @@ class Detail extends ConsumerWidget with SizeDevice, DialogBasic{
                             },
                           ),
                         ),
-                      ),   
+                      ),
                     ],
-                  )
+                  ),
+                )
             ],
           )
       ),

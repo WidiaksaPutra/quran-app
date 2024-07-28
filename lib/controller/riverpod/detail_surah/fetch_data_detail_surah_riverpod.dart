@@ -2,7 +2,7 @@
 
 import 'package:app_quran/controller/riverpod/detail_surah/interface_fetch_data_detail_surah_riverpod.dart';
 import 'package:app_quran/service/detail_surah/interfaces_detail_surah.dart';
-import 'package:app_quran/shared/theme_konstanta.dart';
+import 'package:app_quran/shared/theme_global_variabel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final interfaceDetailDataDetailSurahProvider = Provider<InterfacesDetailSurah>((ref) {

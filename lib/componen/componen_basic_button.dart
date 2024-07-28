@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, sort_child_properties_last, deprecated_member_use
 
 import 'package:flutter/material.dart';
 

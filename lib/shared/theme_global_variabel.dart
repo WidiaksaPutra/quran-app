@@ -1,5 +1,5 @@
-import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:get_it/get_it.dart';
 
 final getItInstance = GetIt.instance;
 DateFormat formatDate = DateFormat('E, d MMM yyyy HH:mm:ss');

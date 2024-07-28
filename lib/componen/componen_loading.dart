@@ -39,8 +39,6 @@ mixin LoadingScrollData{
     required double rightLoading,
     required BuildContext context,
   }){
-    ThemeBox(context);
-    // ignore: curly_braces_in_flow_control_structures
     return (loadingScrollName)
     ? Positioned(
         right: rightLoading,

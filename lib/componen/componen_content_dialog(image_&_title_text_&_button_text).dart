@@ -4,6 +4,7 @@ import 'package:app_quran/shared/theme_box.dart';
 import 'package:app_quran/shared/theme_color.dart';
 import 'package:app_quran/shared/theme_font.dart';
 import 'package:app_quran/shared/theme_text_style.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -37,7 +38,7 @@ class ComponenContentDialog_ImageAndTitleTextAndButtonText extends StatelessWidg
             child: ComponenBasicButton(
               paddingVertical: 0, 
               borderRadius: ThemeBox.defaultRadius5, 
-              content: Text(textButton, style: TextStyle(color: kWhiteColor, fontWeight: FontWeight.w400),),
+              content: AutoSizeText(textButton, style: TextStyle(color: kWhiteColor, fontWeight: FontWeight.w400, fontSize: defaultFont16)),
               onPressed: onTap, 
               primaryColor: primaryColor,
               secondaryColor: kGreyColor,

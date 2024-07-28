@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, use_super_parameters
 
 import 'dart:async';
 
@@ -15,7 +15,6 @@ class SplashScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    ThemeBox(context);
     Timer(const Duration(seconds: 2), () => context.go(RouteName.menuHome),);
     return Scaffold(
       backgroundColor: kPrimaryColor,
